@@ -5,7 +5,7 @@ services:
     image: circleci/postgres:12.3-postgis
     container_name: pc-postgres
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data:delegated
     env_file:
       - env_file
     networks:
@@ -15,10 +15,10 @@ services:
     command: postgres -c logging_collector=on -c log_destination=stderr -c log_min_duration_statement=0 -c log_statement=all -c log_duration=on
 
   postgres-test:
-    image: circleci/postgres:12.3-postgis
+    image: gangstead/postgis:13-3.1-arm
     container_name: pc-postgres-pytest
     volumes:
-      - postgres_data_test:/var/lib/postgresql-test/data
+      - postgres_data_test:/var/lib/postgresql-test/data:delegated
     environment:
       - POSTGRES_DB=pass_culture
       - POSTGRES_USER=pytest
@@ -35,7 +35,7 @@ services:
     container_name: pc-flask
     command: ["./start-api-when-database-is-ready.sh"]
     volumes:
-      - ./api:/opt/services/flaskapp/src
+      - api_sync/:/opt/services/flaskapp/src:cached
     env_file:
       - env_file
       - ${ENV:-development}_env_file
@@ -86,5 +86,7 @@ networks:
 
 volumes:
   postgres_data:
+  api_sync:
+    external: true
   postgres_data_test:
   redis_data:
