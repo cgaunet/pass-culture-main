@@ -2,5 +2,13 @@ version: "2"
 syncs:
   api_sync:
     sync_strategy: 'native_osx'
-    src: './api/' #path to the volume you want to synchronise
-    host_disk_mount_mode: 'cached'
+    src: './api' #path to the volume you want to synchronise
+    host_disk_mount_mode: 'delegated'
+  db_sync:
+    sync_strategy: 'native_osx'
+    src: './db_sync_volume' #path to the volume you want to synchronise
+    host_disk_mount_mode: 'delegated'
+  test_db_sync:
+    sync_strategy: 'native_osx'
+    src: './test_db_sync_volume' #path to the volume you want to synchronise
+    host_disk_mount_mode: 'delegated'

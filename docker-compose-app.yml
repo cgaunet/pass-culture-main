@@ -2,10 +2,10 @@ version: "3.7"
 
 services:
   postgres:
-    image: circleci/postgres:12.3-postgis
+    image: gangstead/postgis:13-3.1-arm
     container_name: pc-postgres
     volumes:
-      - postgres_data:/var/lib/postgresql/data:delegated
+      - db_sync:/var/lib/postgresql/data:delegated
     env_file:
       - env_file
     networks:
@@ -18,7 +18,7 @@ services:
     image: gangstead/postgis:13-3.1-arm
     container_name: pc-postgres-pytest
     volumes:
-      - postgres_data_test:/var/lib/postgresql-test/data:delegated
+      - test_db_sync:/var/lib/postgresql-test/data:delegated
     environment:
       - POSTGRES_DB=pass_culture
       - POSTGRES_USER=pytest
@@ -35,7 +35,7 @@ services:
     container_name: pc-flask
     command: ["./start-api-when-database-is-ready.sh"]
     volumes:
-      - api_sync/:/opt/services/flaskapp/src:cached
+      - api_sync:/opt/services/flaskapp/src:delegated
     env_file:
       - env_file
       - ${ENV:-development}_env_file
@@ -85,8 +85,10 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
+  db_sync:
+    external: true
   api_sync:
     external: true
-  postgres_data_test:
+  test_db_sync:
+    external: true
   redis_data:
