@@ -71,3 +71,8 @@ UPDATE user_offerer SET "validationToken" = pg_temp.random_text(27) WHERE "valid
 
 
 UPDATE venue SET "validationToken" = pg_temp.random_text(27) WHERE "validationToken" is not null;
+
+-- Do not import beneficiary_fraud_* tablesk content as they stores user's information details in an unstructured maneer.
+TRUNCATE beneficiary_fraud_check;
+TRUNCATE beneficiary_fraud_result;
+TRUNCATE beneficiary_fraud_review;
