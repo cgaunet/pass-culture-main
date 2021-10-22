@@ -70,20 +70,6 @@ CMD="$1"
 shift
 
 # =============================================
-# Set variables for env
-# =============================================
-
-if [[ "$ENV" == "production" ]]; then
-  SCALINGO_APP=pass-culture-api
-elif [[ "$ENV" == "testing" ]]; then
-  SCALINGO_APP=pass-culture-api-dev
-elif [[ "$ENV" == "perf" ]]; then
-  SCALINGO_APP=pass-culture-api-perf
-elif [[  ! -z "$ENV" ]]; then
-  SCALINGO_APP=pass-culture-api-"$ENV"
-fi
-
-# =============================================
 # Utilities functions
 # =============================================
 RED='\033[0;31m'
@@ -575,16 +561,6 @@ elif [[ "$CMD" == "symlink" ]]; then
 # Administration commands
 # =============================================
 
-# List pip licences
-elif [[ "$CMD" == "api-licenses" ]]; then
-  COLUMNS=${COLUMNS:-''};
-  if [[ "$ENV" == "development" ]]; then
-    RUN='docker exec -it pc-flask bash -c "cd /opt/services/flaskapp/src/ && pip-licenses --format-html >> licenses.html"'
-  else
-    echo_error "These command is only available in DEV"
-    exit
-  fi
-
 # Display logs from API
 elif [[ "$CMD" == "logs" ]]; then
   source "$INFRA_SCRIPTS_PATH"logs.sh
@@ -593,7 +569,7 @@ elif [[ "$CMD" == "logs" ]]; then
 # Display logs from Database
 elif [[ "$CMD" == "access-db-logs" ]]; then
   source "$INFRA_SCRIPTS_PATH"/access_db_logs.sh
-  access_db_logs $SCALINGO_APP
+  access_db_logs
 
 # Connect to Postgresql database in command line using psql
 elif [[ "$CMD" == "psql" ]]; then
