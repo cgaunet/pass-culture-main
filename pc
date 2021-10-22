@@ -7,15 +7,14 @@ set -o nounset
 # =============================================
 
 if [[ $# -eq 0 ]] || [[ "$1" == "-h" ]]; then
-  echo "$(basename "$0") [-h] [-e env -b backend -f file -r region c] -- program to deal with Pass Culture ecosystem
+  echo "$(basename "$0") [-h] [-e env -b backend -f file c] -- program to deal with Pass Culture ecosystem
 where:
   -h  show this help text
   -e  specify environment to target (default: development)
   -b  specify backend to connect with local app (default: localhost)
-  -f  file to upload to scalingo off-container
-  -r  region
+  -f  file to upload to pod
   -t  specify version you want to deploy (create tag with this name)
-  -c  command that you want to run"
+  c  command that you want to run"
   exit 0
 fi
 
@@ -42,13 +41,6 @@ if [[ $# -gt 2 ]] && [[ "$1" == "-f" ]]; then
   shift 2
 else
   FILE_TO_UPLOAD=${FILE_TO_UPLOAD:-'none'}
-fi
-
-if [[ $# -gt 2 ]] && [[ "$1" == "-r" ]]; then
-  export SCALINGO_REGION=$2
-  shift 2
-else
-  export SCALINGO_REGION=osc-fr1
 fi
 
 if [[ $# -gt 2 ]] && [[ "$1" == "-t" ]]; then
