@@ -610,14 +610,6 @@ elif [[ "$CMD" == "python" ]]; then
     exit
   fi
 
-# Connect to administration instances
-elif [[ "$CMD" == "ssh" ]]; then
-  if [[ "$ENV" == "production" ]]; then
-    ssh deploy@api.passculture.beta.gouv.fr
-  elif [[ "$ENV" == "staging" ]]; then
-    ssh deploy@api.passculture-staging.beta.gouv.fr
-  fi
-
 # Display environement database restore infos
 elif [[ "$CMD" == "db_restore_infos" ]]; then
   source "$INFRA_SCRIPTS_PATH"/get_restore_infos.sh
@@ -643,19 +635,8 @@ else
 fi
 
 # =============================================
-# Execute command
+# Execute command locally
 # =============================================
 
-if [[ $PWD == "/home/deploy/pass-culture-main" ]]; then
-  echo "$RUN"
-  eval "$RUN"
-else
-  if [[ "$ENV" == "production" ]] || [[ "$ENV" == "staging" ]]; then
-    echo "$RUN" | ssh deploy@api.passculture.beta.gouv.fr bash
-  elif [[ "$ENV" == "wordpress" ]]; then
-    ssh debian@passculture.beta.gouv.fr
-  else
-    echo "$RUN"
-    eval "$RUN"
-  fi
-fi
+echo "$RUN"
+eval "$RUN"
